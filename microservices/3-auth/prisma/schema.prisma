@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("AUTH_POSTGRES_URL")
+}
+
+enum UserRole {
+  BUYER
+  SELLER
+  ADMIN
+  SYSTEM
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String
+  role            UserRole @default(BUYER)
+  isEmailVerified Boolean  @default(false)
+
+  emailVerificationToken     String?
+  emailVerificationExpiresAt DateTime?
+
+  refreshToken          String?
+  refreshTokenExpiresAt DateTime?
+
+  resetPasswordToken     String?
+  resetPasswordExpiresAt DateTime?
+
+  otp          String?
+  otpExpiresAt DateTime?
+
+  lastLoginAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  TrustedDevice TrustedDevice[]
+
+  @@index([email])
+  @@map("user")
+}
+
+model TrustedDevice {
+  id       String @id @default(uuid())
+  deviceId String 
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@unique([userId, deviceId])
+  @@map("trusted_device")
+}
+
+
+model OutboxEvent {
+  id          String   @id @default(uuid())
+  aggregateId String
+  topic   String
+  value     Json
+  occurredAt  DateTime @default(now())
+  processed   Boolean  @default(false)
+
+  @@map("outbox_event")
+
+}

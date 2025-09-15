@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-depl 
+  labels:
+    app: search 
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: search 
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1  
+      maxSurge: 1        
+
+  template:  
+    metadata:
+      labels:
+        app: search  
+    spec:
+      containers:
+      - name: search  
+        image: search  
+        imagePullPolicy: Never
+        ports:
+        - name: search
+          containerPort: 4006
+        livenessProbe:
+          httpGet:
+            path: /health  
+            port: 4006
+          initialDelaySeconds: 30  
+          periodSeconds: 10         
+        readinessProbe:
+          httpGet:
+            path: /ready  
+            port: 4006
+          initialDelaySeconds: 5  
+          periodSeconds: 5
+
+        resources:  
+          requests:
+            cpu: "250m"  
+            memory: "256Mi"  
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+            
+        envFrom:
+          - configMapRef:
+              name: global-config
+              
+        env:  
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: ELASTIC_PASSWORD

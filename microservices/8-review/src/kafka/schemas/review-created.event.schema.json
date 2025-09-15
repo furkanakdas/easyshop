@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  
+    "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "buyerId": { "type": "string" },
+    "targetId": { "type": "string" },
+    "targetType": { "type": "string" },
+    "targetSnapshotId": { "type": "string" },
+    "rating": { "type": "number" },
+    "comment": { "type": ["string", "null"] },
+    "createdAt": { "type": "string" },
+    "updatedAt": { "type": "string" }
+  },
+  "required": [
+    "id",
+    "buyerId",
+    "targetId",
+    "targetType",
+    "targetSnapshotId",
+    "rating",
+    "comment",
+    "createdAt",
+    "updatedAt"
+  ]
+}

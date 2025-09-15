@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "userId": { "type": "string" },
+    "firstName": { "type": ["string", "null"] },
+    "lastName": { "type": ["string", "null"] },
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "phone": { "type": "string" },
+          "city": { "type": "string" },
+          "district": { "type": "string" },
+          "neighbourhood": { "type": "string" },
+          "detailedAddress": { "type": "string" },
+          "title": { "type": "string" }
+        },
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "phone",
+          "city",
+          "district",
+          "neighbourhood",
+          "detailedAddress",
+          "title"
+        ]
+      }
+    }
+  },
+  "required": ["userId", "firstName", "lastName", "addresses"]
+}

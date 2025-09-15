@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-depl 
+  labels:
+    app: notification 
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: notification 
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1  
+      maxSurge: 1        
+
+  template:  
+    metadata:
+      labels:
+        app: notification  
+    spec:
+      containers:
+      - name: notification  
+        image: notification  
+        imagePullPolicy: Never
+        ports:
+        - name: notification
+          containerPort: 4002
+        livenessProbe:
+          httpGet:
+            path: /health  
+            port: 4002
+          initialDelaySeconds: 30  
+          periodSeconds: 10         
+        readinessProbe:
+          httpGet:
+            path: /ready  
+            port: 4002
+          initialDelaySeconds: 5  
+          periodSeconds: 5
+
+        resources:  
+          requests:
+            cpu: "250m"  
+            memory: "256Mi"  
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+            
+        envFrom:
+          - configMapRef:
+              name: global-config
+              
+        env:  
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: ELASTIC_PASSWORD

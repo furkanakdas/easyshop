@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-srv  
+spec:
+  type: ClusterIP    
+  selector:
+    app: notification
+  ports:
+  - name: notification
+    protocol: TCP
+    port: 4002       
+    targetPort: 4002

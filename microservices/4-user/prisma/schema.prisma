@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("USER_POSTGRES_URL")
+}
+
+
+
+
+model User {
+  id                         String   @id 
+  email                      String   @unique
+  role                       UserRole
+  isEmailVerified            Boolean  
+
+  lastLoginAt                DateTime?
+  createdAt                  DateTime
+  updatedAt                  DateTime
+
+
+  buyerProfile     BuyerProfile?
+  sellerProfile    SellerProfile?
+
+  @@map("user")
+  @@index([email])
+
+}
+
+
+model BuyerProfile{
+
+    userId   String   @id
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    firstName  String?
+    lastName   String?
+    addresses      Address[]
+
+
+    @@map("buyer_profile")
+}
+
+model SellerProfile{
+    userId   String   @id
+    user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    email           String@unique
+    phone           String
+    identityNumber  String
+
+    businessName    String@unique
+    businessDescription String?
+    companyType CompanyType
+
+    stripeAccountId  String @unique 
+
+    iban            String
+    taxId           String
+
+    createdAt                  DateTime @default(now())
+
+    status          SellerProfileStatus     @default(PENDING)
+
+    @@map("seller_profile")
+    @@index([businessName])
+
+}
+
+
+model Address{
+    id       String   @id @default(uuid())
+    firstName  String
+    lastName   String
+    phone      String
+    city       String
+    district   String
+    neighbourhood String
+    detailedAddress    String
+    title      String
+    
+
+    buyerProfileId  String
+    buyerProfile    BuyerProfile    @relation(fields: [buyerProfileId], references: [userId], onDelete: Cascade)
+}
+
+
+model OutboxEvent {
+  id          String   @id @default(uuid())
+  aggregateId String
+  topic   String
+  value     Json
+  occurredAt  DateTime @default(now())
+  processed   Boolean  @default(false)
+
+  @@map("outbox_event")
+
+}
+
+
+enum SellerProfileStatus{
+  PENDING
+  APPROVED
+}
+
+
+enum UserRole {
+  BUYER
+  SELLER
+  ADMIN
+  SYSTEM
+}
+
+enum CompanyType {
+  SOLE_PROPRIETORSHIP
+}

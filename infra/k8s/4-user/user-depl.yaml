@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-depl 
+  labels:
+    app: user 
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: user 
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1  
+      maxSurge: 1        
+
+  template:  
+    metadata:
+      labels:
+        app: user  
+    spec:
+      containers:
+      - name: user  
+        image: user  
+        imagePullPolicy: Never
+        ports:
+        - name: user
+          containerPort: 4004
+        livenessProbe:
+          httpGet:
+            path: /health  
+            port: 4004
+          initialDelaySeconds: 30  
+          periodSeconds: 10         
+        readinessProbe:
+          httpGet:
+            path: /ready  
+            port: 4004
+          initialDelaySeconds: 5  
+          periodSeconds: 5
+
+        resources:  
+          requests:
+            cpu: "250m"  
+            memory: "256Mi"  
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+            
+        envFrom:
+          - configMapRef:
+              name: global-config
+              
+        env:  
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: ELASTIC_PASSWORD
+        - name: USER_POSTGRES_URL
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: USER_POSTGRES_URL
+        - name: STRIPE_WH_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: STRIPE_WH_SECRET
+        - name: STRIPE_TEST_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: STRIPE_TEST_SECRET_KEY

@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-depl 
+  labels:
+    app: api-gateway 
+spec:
+  replicas: 1  
+  selector:
+    matchLabels:
+      app: api-gateway 
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1  
+      maxSurge: 1        
+
+  template:  
+    metadata:
+      labels:
+        app: api-gateway  
+    spec:
+      containers:
+      - name: api-gateway  
+        image: api-gateway  
+        imagePullPolicy: Never
+        ports:
+        - name: api-gateway
+          containerPort: 4001 
+        livenessProbe:
+          httpGet:
+            path: /health  
+            port: 4001
+          initialDelaySeconds: 30  
+          periodSeconds: 10         
+        readinessProbe:
+          httpGet:
+            path: /ready  
+            port: 4001
+          initialDelaySeconds: 5  
+          periodSeconds: 5         
+
+
+        resources:  
+          requests:
+            cpu: "250m"  
+            memory: "256Mi"  
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
+
+
+        envFrom:
+          - configMapRef:
+              name: global-config
+
+
+        # volumeMounts:
+        #   - name: certs
+        #     mountPath: /certs
+        #     readOnly: true
+
+        env:  
+        # - name: NODE_ENV
+        #   value: "development"
+
+        - name: JWT_GATEWAY_PRIVATE_TOKEN_BASE64
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: JWT_GATEWAY_PRIVATE_TOKEN_BASE64
+
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: easyshop-secret
+              key: ELASTIC_PASSWORD
+
+
+      # volumes:
+      #   - name: certs
+      #     secret:
+      #       secretName: ingress-tls-secret

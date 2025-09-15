@@ -1,0 +1,87 @@
+resources:
+  - secret/ingress-tls-secret.yaml
+  - secret/easyshop-secret.yaml
+  - config-map/global-config.yaml
+
+
+  - ingress/ingress.yaml
+  - elasticsearch/elasticsearch-depl.yaml
+  - elasticsearch/elasticsearch-pvc.yaml
+  - elasticsearch/elasticsearch-srv.yaml
+  - kibana/kibana-depl.yaml
+  - kibana/kibana-srv.yaml
+
+
+  - kafka/kafka-depl.yaml
+  - kafka/kafka-pvc.yaml
+  - kafka/kafka-srv.yaml
+
+
+  - schema-registry/schema-registry-depl.yaml
+  - schema-registry/schema-registry-srv.yaml
+
+
+  - 1-api-gateway/api-gateway-depl.yaml
+  - 1-api-gateway/api-gateway-srv.yaml
+  - 1-api-gateway/api-gateway-hpa.yaml
+  - 1-api-gateway/redis-api-gateway-depl.yaml
+  - 1-api-gateway/redis-api-gateway-srv.yaml
+
+
+  - 3-auth/auth-depl.yaml
+  - 3-auth/auth-srv.yaml
+  - 3-auth/auth-hpa.yaml
+  - 3-auth/postgres-auth-depl.yaml
+  - 3-auth/postgres-auth-pvc.yaml
+  - 3-auth/postgres-auth-srv.yaml
+
+  - 4-user/user-depl.yaml
+  - 4-user/user-srv.yaml
+  - 4-user/user-hpa.yaml
+  - 4-user/postgres-user-depl.yaml
+  - 4-user/postgres-user-pvc.yaml
+  - 4-user/postgres-user-srv.yaml
+
+
+  - 5-product/product-depl.yaml
+  - 5-product/product-srv.yaml
+  - 5-product/product-hpa.yaml
+  - 5-product/postgres-product-depl.yaml
+  - 5-product/postgres-product-pvc.yaml
+  - 5-product/postgres-product-srv.yaml
+
+  - 6-search/search-depl.yaml
+  - 6-search/search-srv.yaml
+  - 6-search/search-hpa.yaml
+
+
+  - 7-order/order-depl.yaml
+  - 7-order/order-srv.yaml
+  - 7-order/order-hpa.yaml
+  - 7-order/postgres-order-depl.yaml
+  - 7-order/postgres-order-pvc.yaml
+  - 7-order/postgres-order-srv.yaml
+
+
+  - 8-review/review-depl.yaml
+  - 8-review/review-srv.yaml
+  - 8-review/review-hpa.yaml
+  - 8-review/postgres-review-depl.yaml
+  - 8-review/postgres-review-pvc.yaml
+  - 8-review/postgres-review-srv.yaml
+
+
+  - 2-notification/notification-depl.yaml
+  - 2-notification/notification-srv.yaml
+  - 2-notification/notification-hpa.yaml
+
+
+
+
+
+
+
+
+
+  # kubectl apply -k k8s/
+  # kubectl delete -k k8s/

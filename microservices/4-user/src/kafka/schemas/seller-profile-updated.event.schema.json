@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "userId": { "type": "string" },
+    "email": { "type": "string" },
+    "phone": { "type": "string" },
+    "identityNumber": { "type": "string" },
+    "businessName": { "type": "string" },
+    "businessDescription": { "type": ["string", "null"] },
+    "companyType": { "type": "string" },
+    "stripeAccountId": { "type": "string" },
+    "iban": { "type": "string" },
+    "taxId": { "type": "string" },
+    "createdAt": { "type": "string" },
+    "status": { "type": "string" }
+  },
+  "required": [
+    "userId",
+    "email",
+    "phone",
+    "identityNumber",
+    "businessName",
+    "businessDescription",
+    "companyType",
+    "stripeAccountId",
+    "iban",
+    "taxId",
+    "createdAt",
+    "status"
+  ]
+}

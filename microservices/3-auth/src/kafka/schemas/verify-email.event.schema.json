@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "receiverEmail": {
+      "type": "string",
+      "description": "The email address of the receiver"
+    },
+    "verifyLink": {
+      "type": "string",
+      "description": "The verification link to be sent"
+    }
+  },
+  "required": [
+    "receiverEmail",
+    "verifyLink"
+  ],
+  "additionalProperties": false
+}
